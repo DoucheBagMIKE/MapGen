@@ -186,6 +186,10 @@ public class MapGenerator : MonoBehaviour {
             {
                 GenItem((int)child.position.x, (int)child.position.y, Items[mapData.Rng.Next(0, Items.Count)], child);
             }
+            else if (child.name == "EnemySpawner")
+            {
+                //...
+            }
             
         }
         return go;
@@ -307,29 +311,6 @@ public class MapGenerator : MonoBehaviour {
         print("End Pos: " + endPos.ToString());
         print("Dist to End: " + endDist.ToString());
         return endPos;
-    }
-    List<MapPos> FindFringeNeighbors(MapPos Pos, int TileState, List<MapPos> visited)
-    {
-        List<MapPos> ret = new List<MapPos>();
-
-        foreach (MapPos index in MazeGenerator.dirs)
-        {
-            int x = Pos.x + (index.x * 2);
-            int y = Pos.y + (index.y * 2);
-
-            if (x < 0 || x > mapData.width - 1 || y < 0 || y > mapData.height - 1)
-            {
-                continue;
-            }
-
-            MapPos rPos = new MapPos(x, y);
-
-            if (mapData.Map[x, y] == TileState && visited.Contains(rPos) == false)
-            {
-                ret.Add(rPos);
-            }
-        }
-        return ret;
     }
     void getFiles ()
     {
