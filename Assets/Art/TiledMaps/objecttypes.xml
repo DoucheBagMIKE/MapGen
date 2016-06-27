@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="Item" color="#ffff7f">
+  <property name="SpawnerType" type="string" default="Item"/>
+ </objecttype>
+ <objecttype name="Enemy" color="#ff0000">
+  <property name="SpawnerType" type="string" default="Enemy"/>
+ </objecttype>
+</objecttypes>
