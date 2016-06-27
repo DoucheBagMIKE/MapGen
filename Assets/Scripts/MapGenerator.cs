@@ -254,6 +254,7 @@ public class MapGenerator : MonoBehaviour {
     }
     void GenPrefabs()
     {
+
         List<MapPos> Generated = new List<MapPos>();
 
         int prefabX;
@@ -280,11 +281,15 @@ public class MapGenerator : MonoBehaviour {
                 {
                     Generated.AddRange(getLargeRoomPositions(x, y));
                     go = GenRoom(prefabX, prefabY + 32, _64x64[mapData.Rng.Next(0, _64x64.Count)], true, new MapPos(x, y));
+                    CameraZone camZone = go.GetComponent<CameraZone>();
+                    camZone.zoneWidth = 64;
+                    camZone.zoneHeight = 64;
                 }
                 else if (mapData.Map[x,y] == 1 && !Generated.Contains(new MapPos(x, y)))
                 {
                     go = GenRoom(prefabX, prefabY, _32x32[mapData.Rng.Next(0, _32x32.Count)], false, new MapPos(x, y));
                 }
+
                 
                 mapX++;
             }
