@@ -18,6 +18,8 @@ public class MapGenerator : MonoBehaviour {
     List<string> _32x32 = new List<string>();
     List<string> _64x64 = new List<string>();
     List<string> Items = new List<string>();
+
+    MapPos StartPos = new MapPos(-1, -1);
     
 
     void Awake ()
@@ -240,10 +242,14 @@ public class MapGenerator : MonoBehaviour {
 
         if (mazeGen.DeadEnds.Count != 0)
         {
-            MapPos StartPos = mazeGen.DeadEnds[mapData.RandomEven(0, mazeGen.DeadEnds.Count - 1)];
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            GameObject cam = GameObject.FindGameObjectWithTag("MainCamera");
+            StartPos = mazeGen.DeadEnds[mapData.RandomEven(0, mazeGen.DeadEnds.Count - 1)];
             print("Start Pos: " + StartPos.ToString());
             findmapend(StartPos);
-            GameObject.FindGameObjectWithTag("Player").transform.position = new Vector3((((StartPos.x*32)/2)+16), (((StartPos.y*32)/2)-16), -1);
+            player.transform.position = new Vector3((((StartPos.x*32)/2)+16), (((StartPos.y*32)/2)-16), 0);
+            cam.transform.position = new Vector3((((StartPos.x * 32) / 2) + 16), (((StartPos.y * 32) / 2) - 16), -10);
+
         }
         else
         {
@@ -260,7 +266,6 @@ public class MapGenerator : MonoBehaviour {
         int prefabY;
         int mapX = 0;
         int mapY = 0;
-
         for (int y = 0; y < mapData.height; y = y + 2)
         {
 
@@ -280,10 +285,22 @@ public class MapGenerator : MonoBehaviour {
                 {
                     Generated.AddRange(getLargeRoomPositions(x, y));
                     go = GenRoom(prefabX, prefabY + 32, _64x64[mapData.Rng.Next(0, _64x64.Count)], true, new MapPos(x, y));
+                    CameraZone camZone = go.GetComponent<CameraZone>();
+                    BoxCollider2D camColl = go.GetComponent<BoxCollider2D>();
+
+                    camZone.zoneWidth = 64;
+                    camZone.zoneHeight = 64;
+                    camColl.size = new Vector2(64, 64);
+                    camColl.offset = new Vector2(32, -32);
                 }
                 else if (mapData.Map[x,y] == 1 && !Generated.Contains(new MapPos(x, y)))
                 {
                     go = GenRoom(prefabX, prefabY, _32x32[mapData.Rng.Next(0, _32x32.Count)], false, new MapPos(x, y));
+                    if (new MapPos(x,y).Equals(StartPos))
+                    {
+                        CameraZone camZone = go.GetComponent<CameraZone>();
+                        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().curCamZone = camZone;
+                    }
                 }
                 
                 mapX++;

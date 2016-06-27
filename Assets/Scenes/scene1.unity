@@ -172,6 +172,7 @@ GameObject:
   - 212: {fileID: 1730208251}
   - 50: {fileID: 1730208254}
   - 61: {fileID: 1730208253}
+  - 114: {fileID: 1730208256}
   - 114: {fileID: 1730208255}
   m_Layer: 0
   m_Name: Player
@@ -205,7 +206,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -263,9 +264,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1730208250}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4475f28e76a9b7d4098d73b279d9367e, type: 3}
+  m_Script: {fileID: 11500000, guid: e4dcda40e926852428ea41d26228b225, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1730208256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1730208250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d5b6b44f27b2c4395de4546e2c36bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpd: 7
 --- !u!1 &2063167991
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,6 +291,7 @@ GameObject:
   - 92: {fileID: 2063167994}
   - 124: {fileID: 2063167993}
   - 81: {fileID: 2063167992}
+  - 114: {fileID: 2063167997}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -353,3 +367,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1730208252}
   m_RootOrder: 0
+--- !u!114 &2063167997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2063167991}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c6e2a3c776b304ead06517c38c5a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetTransform: {fileID: 1730208252}
+  lerpSpd: 0.5
+  curCamZone: {fileID: 0}
+  min: {x: 0, y: 0}
+  max: {x: 0, y: 0}
+  verExtent: 0
+  horExtent: 0

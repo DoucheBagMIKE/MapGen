@@ -25,6 +25,14 @@ class ChunkImporter : ICustomTiledImporter
 
     public void CustomizePrefab(GameObject prefab)
     {
+        CameraZone camZone = prefab.AddComponent<CameraZone>();
+        BoxCollider2D camColl = prefab.GetComponent<BoxCollider2D>();
+        camZone.zoneWidth = 32;
+        camZone.zoneHeight = 32;
+        camColl.size = new Vector2(32, 32);
+        camColl.offset = new Vector2(16, -16);
+        camColl.isTrigger = true;
+
         prefab.AddComponent<DoorManager>();
         DoorManager doorManager = prefab.GetComponent<DoorManager>();
         if (doorManager.doors == null)
