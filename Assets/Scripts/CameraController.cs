@@ -41,9 +41,18 @@ public class CameraController : MonoBehaviour {
     {
         curCamZone = zone;
 
+        /* // centered hotspot
         min.x = curCamZone.transform.position.x - ((curCamZone.zoneWidth / 2));
         max.x = curCamZone.transform.position.x + (curCamZone.zoneWidth / 2);
         min.y = curCamZone.transform.position.y - (curCamZone.zoneHeight / 2);
         max.y = curCamZone.transform.position.y + (curCamZone.zoneHeight / 2);
+        */
+
+
+        // top left hotspot
+        min.x = curCamZone.transform.position.x;
+        max.x = curCamZone.transform.position.x + (curCamZone.zoneWidth);
+        min.y = curCamZone.transform.position.y - (curCamZone.zoneHeight);
+        max.y = curCamZone.transform.position.y;
     }
 }
