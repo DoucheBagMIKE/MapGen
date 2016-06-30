@@ -34,7 +34,15 @@ public class MazeGenerator : MonoBehaviour
 
     public void Generate(int sx, int sy)
     {
-        DeadEnds = new List<MapPos>();
+        if (DeadEnds == null)
+        {
+            DeadEnds = new List<MapPos>();
+        }
+        else
+        {
+            DeadEnds.Clear();
+        }
+        
         List<MapPos> RoomPositions = new List<MapPos>();
 
         if (sx < 0 || sx > mapData.width - 1 || sy < 0 || sy > mapData.height - 1)
@@ -87,6 +95,7 @@ public class MazeGenerator : MonoBehaviour
         {
             for (int y = 0; y < mapData.height; y = y + 2)
             {
+                MapPos cPos = new MapPos(x, y);
                 List<MapPos> roomdata = mapGen.getLargeRoomPositions(x, y);
 
                 if (roomdata.Count == 4)
@@ -104,17 +113,17 @@ public class MazeGenerator : MonoBehaviour
                     if (isNotInMaze)
                     {
                         RoomPositions.AddRange(roomdata);
-                        mapData.LargeRoomPositions.Add(new MapPos(x, y));
+                        mapData.LargeRoomPositions.Add(cPos);
                     }
                 }
 
                 if (mapData.Map[x, y] == 1 && IsDeadEnd(x, y))
                 {
-                    if (RoomPositions.Contains(new MapPos(x, y)))
+                    if (RoomPositions.Contains(cPos))
                     {
                         continue;
                     }
-                    DeadEnds.Add(new MapPos(x, y));
+                    DeadEnds.Add(cPos);
                 }
             }
             

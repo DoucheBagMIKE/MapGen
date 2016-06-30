@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class MapData : MonoBehaviour {
 
+
+public class MapData : MonoBehaviour {
+    public const int ROOMWIDTH = 32;
+    public const int ROOMHEIGHT = 18;
     public int width;
     public int height;
     public int[,] Map;

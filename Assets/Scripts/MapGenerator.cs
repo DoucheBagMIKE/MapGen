@@ -15,9 +15,11 @@ public class MapGenerator : MonoBehaviour {
 
     public int[,] Map;
 
-    List<string> _32x32 = new List<string>();
-    List<string> _64x64 = new List<string>();
-    List<string> Items = new List<string>();
+    List<string> _32x32;
+    List<string> _64x64;
+    List<string> Items;
+    private Dictionary<string, MapPos> _DoorRoomLookUp;
+    public string[] dirs;
 
     MapPos StartPos = new MapPos(-1, -1);
     
@@ -26,6 +28,23 @@ public class MapGenerator : MonoBehaviour {
     {
         mapData = gameObject.GetComponent<MapData>();
         mazeGen = gameObject.GetComponent<MazeGenerator>();
+
+        _DoorRoomLookUp = new Dictionary<string, MapPos>();
+        _DoorRoomLookUp["Door_Bottom_Left"] = new MapPos(0,  -1);
+        _DoorRoomLookUp["Door_Left_Bottom"] = new MapPos( -1, 0);
+        _DoorRoomLookUp["Door_Bottom_Right"] = new MapPos(2,  -1);
+        _DoorRoomLookUp["Door_Right_Bottom"] = new MapPos(3, 0);
+        _DoorRoomLookUp["Door_Top_Left"] = new MapPos(0, 3);
+        _DoorRoomLookUp["Door_Left_Top"] = new MapPos(-1, 2);
+        _DoorRoomLookUp["Door_Top_Right"] = new MapPos(2, 3);
+        _DoorRoomLookUp["Door_Right_Top"] = new MapPos(3, 2);
+
+        dirs = new string[4] { "Up", "Down", "Left", "Right" };
+
+        _32x32 = new List<string>();
+        _64x64 = new List<string>();
+        Items = new List<string>();
+        
     }
 
     void Start()
@@ -63,6 +82,10 @@ public class MapGenerator : MonoBehaviour {
         fringe.Enqueue(new MapPos(x, y));
         List<MapPos> visited = new List<MapPos>();
         List<MapPos> roomPositions = new List<MapPos>();
+        int nx;
+        int ny;
+        MapPos nPos;
+
         while (fringe.Count != 0)
         {
 
@@ -78,22 +101,18 @@ public class MapGenerator : MonoBehaviour {
                 roomCount++;
                 roomPositions.Add(cPos);
             }
-            MapPos[] dirs = new MapPos[4]
+            foreach (MapPos dir in MazeGenerator.dirs)
             {
-                        new MapPos(cPos.x + 1, cPos.y),
-                        new MapPos(cPos.x - 1, cPos.y),
-                        new MapPos(cPos.x, cPos.y + 1),
-                        new MapPos(cPos.x, cPos.y - 1)
-            };
-            foreach (MapPos dir in dirs)
-            {
-                if (dir.x < 0 | dir.x > mapData.width - 1 || dir.y < 0 || dir.y > mapData.height - 1)
+                nx = dir.x + cPos.x;
+                ny = dir.y + cPos.y;
+                nPos = new MapPos(nx, ny);
+                if (nx < 0 | nx > mapData.width - 1 || ny < 0 || ny > mapData.height - 1)
                 {
                     continue;
                 }
-                if (!visited.Contains(dir) && mapData.Map[dir.x, dir.y] == 1 && !fringe.Contains(dir))
+                if (!visited.Contains(nPos) && mapData.Map[nx, ny] == 1 && !fringe.Contains(nPos))
                 {
-                    fringe.Enqueue(dir);
+                    fringe.Enqueue(nPos);
                 }
             }
         }
@@ -102,28 +121,18 @@ public class MapGenerator : MonoBehaviour {
     }
     void SetDoors(int x, int y, DoorManager doorManager, bool isLargeRoom)
     {
-        string[] dirs = new string[4] { "Up", "Down", "Left", "Right" };
+        
         if (isLargeRoom == true)
-        {
-            Dictionary<string, MapPos> IsWall = new Dictionary<string, MapPos>();
-
-            IsWall["Door_Bottom_Left"] = new MapPos(x, y - 1);
-            IsWall["Door_Left_Bottom"] = new MapPos(x - 1, y);
-            IsWall["Door_Bottom_Right"] = new MapPos(x + 2, y - 1);
-            IsWall["Door_Right_Bottom"] = new MapPos(x + 3, y);
-            IsWall["Door_Top_Left"] = new MapPos(x, y + 3);
-            IsWall["Door_Left_Top"] = new MapPos(x - 1, y + 2);
-            IsWall["Door_Top_Right"] = new MapPos(x + 2, y + 3);
-            IsWall["Door_Right_Top"] = new MapPos(x + 3, y + 2);
+        {          
 
             foreach (Door door in doorManager.doors)
             {
-                foreach(string key in IsWall.Keys)
+                foreach(string key in _DoorRoomLookUp.Keys)
                 {
                     if (door.gameObject.name.Contains(key) == true)
                     {
-                        int dx = IsWall[key].x;
-                        int dy = IsWall[key].y;
+                        int dx = _DoorRoomLookUp[key].x + x;
+                        int dy = _DoorRoomLookUp[key].y + y;
                         if ((dx < 0 || dx > mapData.width - 1 || dy < 0 || dy > mapData.height - 1 ) || mapData.Map[dx,dy] == 0)
                         {
                             door.gameObject.SetActive(true);
@@ -247,8 +256,8 @@ public class MapGenerator : MonoBehaviour {
             StartPos = mazeGen.DeadEnds[mapData.RandomEven(0, mazeGen.DeadEnds.Count - 1)];
             print("Start Pos: " + StartPos.ToString());
             findmapend(StartPos);
-            player.transform.position = new Vector3((((StartPos.x*32)/2)+16), (((StartPos.y*32)/2)-16), 0);
-            cam.transform.position = new Vector3((((StartPos.x * 32) / 2) + 16), (((StartPos.y * 32) / 2) - 16), -10);
+            player.transform.position = new Vector3((((StartPos.x*MapData.ROOMWIDTH)/2)+(MapData.ROOMWIDTH/2)), (((StartPos.y*MapData.ROOMHEIGHT)/2)-(MapData.ROOMHEIGHT/2)), 0);
+            cam.transform.position = new Vector3((((StartPos.x * MapData.ROOMWIDTH) / 2) + (MapData.ROOMWIDTH / 2)), (((StartPos.y * MapData.ROOMHEIGHT) / 2) - (MapData.ROOMHEIGHT / 2)), -10);
 
         }
         else
@@ -271,32 +280,32 @@ public class MapGenerator : MonoBehaviour {
 
             for (int x = 0; x < mapData.width; x = x + 2)
             {
-
+                MapPos cPos = new MapPos(x, y);
                 if (mapX == (mapData.width / 2) + 1)
                 {
                     mapX = 0;
                     mapY++;
                 }
 
-                prefabX = mapX * 32;
-                prefabY = mapY * 32;
+                prefabX = mapX * MapData.ROOMWIDTH;
+                prefabY = mapY * MapData.ROOMHEIGHT;
                 GameObject go;
-                if (mapData.LargeRoomPositions.Contains(new MapPos(x,y)))
+                if (mapData.LargeRoomPositions.Contains(cPos))
                 {
                     Generated.AddRange(getLargeRoomPositions(x, y));
-                    go = GenRoom(prefabX, prefabY + 32, _64x64[mapData.Rng.Next(0, _64x64.Count)], true, new MapPos(x, y));
+                    go = GenRoom(prefabX, prefabY + MapData.ROOMHEIGHT, _64x64[mapData.Rng.Next(0, _64x64.Count)], true, cPos);
                     CameraZone camZone = go.GetComponent<CameraZone>();
                     BoxCollider2D camColl = go.GetComponent<BoxCollider2D>();
 
-                    camZone.zoneWidth = 64;
-                    camZone.zoneHeight = 64;
-                    camColl.size = new Vector2(64, 64);
-                    camColl.offset = new Vector2(32, -32);
+                    camZone.zoneWidth = MapData.ROOMWIDTH * 2;
+                    camZone.zoneHeight = MapData.ROOMHEIGHT * 2;
+                    camColl.size = new Vector2(MapData.ROOMWIDTH*2, MapData.ROOMHEIGHT*2);
+                    camColl.offset = new Vector2(MapData.ROOMWIDTH, -MapData.ROOMHEIGHT);
                 }
-                else if (mapData.Map[x,y] == 1 && !Generated.Contains(new MapPos(x, y)))
+                else if (mapData.Map[x,y] == 1 && !Generated.Contains(cPos))
                 {
-                    go = GenRoom(prefabX, prefabY, _32x32[mapData.Rng.Next(0, _32x32.Count)], false, new MapPos(x, y));
-                    if (new MapPos(x,y).Equals(StartPos))
+                    go = GenRoom(prefabX, prefabY, _32x32[mapData.Rng.Next(0, _32x32.Count)], false, cPos);
+                    if (cPos.Equals(StartPos))
                     {
                         CameraZone camZone = go.GetComponent<CameraZone>();
                         GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().curCamZone = camZone;
@@ -364,11 +373,11 @@ public class MapGenerator : MonoBehaviour {
             foreach (FileInfo file in fileInfo)
             {
                 string name = file.Name.Replace(".prefab", "");
-                if (name.Contains("32x32"))
+                if (name.Contains("32x18"))
                 {
                     _32x32.Add(name);
                 }
-                else if (name.Contains("64x64"))
+                else if (name.Contains("64x36"))
                 {
                     _64x64.Add(name);
                 }
