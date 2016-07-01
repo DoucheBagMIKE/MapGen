@@ -133,13 +133,13 @@ public class MazeGenerator : MonoBehaviour
 
     MapPos pickNextFringe()
     {
-        if (mapData.Rng.NextDouble() < windyOrRandomPercent)
+        if (mapData.Rng.NextDouble() <= windyOrRandomPercent)
         {
             return Fringe[mapData.Rng.Next(0, Fringe.Count - 1)];
         }
         else
         {
-            return Fringe[0];
+            return Fringe[Fringe.Count - 1];
         }
         
     }

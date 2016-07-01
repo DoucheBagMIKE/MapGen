@@ -22,7 +22,10 @@ public class MapGenerator : MonoBehaviour {
     public string[] dirs;
 
     MapPos StartPos = new MapPos(-1, -1);
-    
+
+    [Range(0, 10)]
+    public int MaxLargeRooms;
+
 
     void Awake ()
     {
@@ -251,6 +254,11 @@ public class MapGenerator : MonoBehaviour {
 
         if (mazeGen.DeadEnds.Count != 0)
         {
+            while (mapData.LargeRoomPositions.Count > MaxLargeRooms)
+            {
+                mapData.LargeRoomPositions.RemoveAt(mapData.Rng.Next(0, mapData.LargeRoomPositions.Count - 1));
+            }
+
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             GameObject cam = GameObject.FindGameObjectWithTag("MainCamera");
             StartPos = mazeGen.DeadEnds[mapData.RandomEven(0, mazeGen.DeadEnds.Count - 1)];
