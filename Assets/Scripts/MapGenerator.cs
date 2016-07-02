@@ -26,6 +26,8 @@ public class MapGenerator : MonoBehaviour {
     [Range(0, 10)]
     public int MaxLargeRooms;
 
+    bool GotFiles = false;
+    int mapsGenerated;
 
     void Awake ()
     {
@@ -47,6 +49,9 @@ public class MapGenerator : MonoBehaviour {
         _32x32 = new List<string>();
         _64x64 = new List<string>();
         Items = new List<string>();
+
+        mapsGenerated = 0;
+        
         
     }
 
@@ -247,18 +252,28 @@ public class MapGenerator : MonoBehaviour {
     }
     void GenPrefabMaze()
     {
-        getFiles();
-        mapData.LargeRoomPositions = new List<MapPos>();
-        mazeGen.Generate(mapData.RandomEven(0, mapData.width - 1), mapData.RandomEven(0, mapData.height - 1));
-        
+        mapsGenerated++;
 
+        if (mapData.LargeRoomPositions == null)
+        {
+            mapData.LargeRoomPositions = new List<MapPos>();
+        }
+        else
+        {
+            mapData.LargeRoomPositions.Clear();
+        }
+
+        getFiles();
+        
+        mazeGen.Generate(mapData.RandomEven(0, mapData.width - 1), mapData.RandomEven(0, mapData.height - 1));
+        InitLargeRooms ();
+        CutExcessLargeRooms();
+        
+        // dead ends are a problem in maps that can contain nothing but loops. (StackOverflow Exception)
+        // they suck as a starting location. usefull for and end location.
         if (mazeGen.DeadEnds.Count != 0)
         {
-            while (mapData.LargeRoomPositions.Count > MaxLargeRooms)
-            {
-                mapData.LargeRoomPositions.RemoveAt(mapData.Rng.Next(0, mapData.LargeRoomPositions.Count - 1));
-            }
-
+            //start/end location wont allways spawn now because there isnt always dead ends.
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             GameObject cam = GameObject.FindGameObjectWithTag("MainCamera");
             StartPos = mazeGen.DeadEnds[mapData.RandomEven(0, mazeGen.DeadEnds.Count - 1)];
@@ -270,7 +285,10 @@ public class MapGenerator : MonoBehaviour {
         }
         else
         {
-            GenPrefabMaze();
+            if (mapsGenerated < 10)
+            {
+                GenPrefabMaze();
+            }
         }
         GenPrefabs();
         
@@ -342,31 +360,13 @@ public class MapGenerator : MonoBehaviour {
         print("Dist to End: " + endDist.ToString());
         return endPos;
     }
-    List<MapPos> FindFringeNeighbors(MapPos Pos, int TileState, List<MapPos> visited)
-    {
-        List<MapPos> ret = new List<MapPos>();
-
-        foreach (MapPos index in MazeGenerator.dirs)
-        {
-            int x = Pos.x + (index.x * 2);
-            int y = Pos.y + (index.y * 2);
-
-            if (x < 0 || x > mapData.width - 1 || y < 0 || y > mapData.height - 1)
-            {
-                continue;
-            }
-
-            MapPos rPos = new MapPos(x, y);
-
-            if (mapData.Map[x, y] == TileState && visited.Contains(rPos) == false)
-            {
-                ret.Add(rPos);
-            }
-        }
-        return ret;
-    }
     void getFiles ()
     {
+        if (GotFiles)
+        {
+            return;
+        }
+
         string[] paths = new string[2]
         {
             "\\Tiled2Unity\\Prefabs\\Resources\\",
@@ -401,4 +401,63 @@ public class MapGenerator : MonoBehaviour {
         }
         
      }
+
+    void InitLargeRooms()
+    {
+        for (int x = 0; x < mapData.width; x = x + 2)
+        {
+            for (int y = 0; y < mapData.height; y = y + 2)
+            {
+                MapPos cPos = new MapPos(x, y);
+                List<MapPos> roomdata = getLargeRoomPositions(x, y);
+
+                if (roomdata.Count == 4)
+                {
+                    bool isNotInMaze = true;
+
+                    foreach (MapPos pos in roomdata)
+                    {
+                        if (mazeGen.RoomPositions.Contains(pos))
+                        {
+                            isNotInMaze = false;
+                        }
+                    }
+
+                    if (isNotInMaze)
+                    {
+                        mazeGen.RoomPositions.AddRange(roomdata);
+                        mapData.LargeRoomPositions.Add(cPos);
+                    }
+                }
+
+                if (!mazeGen.RoomPositions.Contains(cPos) && mapData.Map[x, y] == 1 )//&& mazeGen.IsDeadEnd(x, y))
+                {
+                    mazeGen.DeadEnds.Add(cPos);
+                }
+            }
+
+        }
+    }
+
+    void CutExcessLargeRooms ()
+    {
+        while (mapData.LargeRoomPositions.Count > MaxLargeRooms)
+        {
+            MapPos roompos = mapData.LargeRoomPositions[mapData.Rng.Next(0, mapData.LargeRoomPositions.Count - 1)];
+            mapData.LargeRoomPositions.Remove(roompos);
+
+            // fimnd all dead ends in room then add them to the dead ends list
+            for (int x = roompos.x; x < roompos.x + 2; x = x + 2)
+            {
+                for (int y = roompos.y; y < roompos.y + 2; y = y + 2)
+                {
+                    if (mazeGen.IsDeadEnd(x, y))
+                    {
+                        mazeGen.DeadEnds.Add(new MapPos(x, y));
+                    }
+                }
+            }
+
+        }
+    }
 }

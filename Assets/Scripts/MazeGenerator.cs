@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class MazeGenerator : MonoBehaviour
 {
     // Blockwise growing tree algorithom.
-    public static MapPos[] dirs = new MapPos[4] { new MapPos(-1, 0), new MapPos(0,1), new MapPos(1, 0), new MapPos(0, -1) };
+    public static MapPos[] dirs = new MapPos[4] { new MapPos(-1, 0), new MapPos(0, 1), new MapPos(1, 0), new MapPos(0, -1) };
 
     [HideInInspector]
     public MapGenerator mapGen;
@@ -14,13 +14,16 @@ public class MazeGenerator : MonoBehaviour
     public bool[,] Visited;
     List<MapPos> Fringe;
     public List<MapPos> DeadEnds;
+    [Range(0, 10)]
     public int RemoveDeadEndsIterations;
+    [Range (0,10)]
     public int DeadCells;
 
     [Range(0f,1f)]
     public float loopPercent;
     [Range(0f,1f)]
     public float windyOrRandomPercent;
+    public List<MapPos> RoomPositions;
 
     // Use this for initialization
     void Awake()
@@ -43,7 +46,7 @@ public class MazeGenerator : MonoBehaviour
             DeadEnds.Clear();
         }
         
-        List<MapPos> RoomPositions = new List<MapPos>();
+        RoomPositions = new List<MapPos>();
 
         if (sx < 0 || sx > mapData.width - 1 || sy < 0 || sy > mapData.height - 1)
         {
@@ -89,46 +92,6 @@ public class MazeGenerator : MonoBehaviour
         {
             Sparsify();
         }
-
-        
-        for (int x = 0; x < mapData.width; x = x + 2)
-        {
-            for (int y = 0; y < mapData.height; y = y + 2)
-            {
-                MapPos cPos = new MapPos(x, y);
-                List<MapPos> roomdata = mapGen.getLargeRoomPositions(x, y);
-
-                if (roomdata.Count == 4)
-                {
-                    bool isNotInMaze = true;
-
-                    foreach (MapPos pos in roomdata)
-                    {
-                        if (RoomPositions.Contains(pos))
-                        {
-                            isNotInMaze = false;
-                        }
-                    }
-
-                    if (isNotInMaze)
-                    {
-                        RoomPositions.AddRange(roomdata);
-                        mapData.LargeRoomPositions.Add(cPos);
-                    }
-                }
-
-                if (mapData.Map[x, y] == 1 && IsDeadEnd(x, y))
-                {
-                    if (RoomPositions.Contains(cPos))
-                    {
-                        continue;
-                    }
-                    DeadEnds.Add(cPos);
-                }
-            }
-            
-        }
-        print("DeadEndCount : " + DeadEnds.Count.ToString());
     }
 
     MapPos pickNextFringe()

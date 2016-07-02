@@ -116,9 +116,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapGen: {fileID: 0}
   mapData: {fileID: 0}
-  RemoveDeadEndsIterations: 0
-  DeadCells: 7
-  loopPercent: 1
+  RemoveDeadEndsIterations: 2
+  DeadCells: 0
+  loopPercent: 0.504
   windyOrRandomPercent: 1
 --- !u!114 &606721399
 MonoBehaviour:
