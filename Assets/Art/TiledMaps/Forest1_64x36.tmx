@@ -4,7 +4,7 @@
   <property name="unity:resource" type="bool" value="true"/>
  </properties>
  <tileset firstgid="1" name="Forest" tilewidth="8" tileheight="8" tilecount="170" columns="10">
-  <image source="../../../../../DarkZeldaUnity/Assets/Art/Env/Forest.png" trans="ffffff" width="80" height="136"/>
+  <image source="../Forest.png" trans="ffffff" width="80" height="136"/>
   <tile id="4">
    <objectgroup draworder="index">
     <object id="1" x="0" y="0" width="8" height="8"/>
