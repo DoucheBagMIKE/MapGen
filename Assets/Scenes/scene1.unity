@@ -134,7 +134,7 @@ MonoBehaviour:
   GenType: 1
   mapData: {fileID: 0}
   dirs: []
-  MaxLargeRooms: 2
+  MaxLargeRooms: 1
 --- !u!114 &606721400
 MonoBehaviour:
   m_ObjectHideFlags: 0

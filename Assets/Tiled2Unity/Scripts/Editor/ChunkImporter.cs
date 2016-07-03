@@ -52,6 +52,9 @@ class ChunkImporter : ICustomTiledImporter
             }
             else if (child.name.Contains("Spawners"))
             {
+                Vector3 cPos = child.gameObject.transform.position;
+                cPos.Set(cPos.x + 0.5f, cPos.y + 0.5f, cPos.z);
+
                 foreach (BoxCollider2D box2d in child.GetComponentsInChildren<BoxCollider2D>())
                 {
                     BoxCollider2D.DestroyImmediate(box2d);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="8" tileheight="8" nextobjectid="63">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="18" tilewidth="8" tileheight="8" nextobjectid="74">
  <properties>
   <property name="unity:resource" type="bool" value="true"/>
  </properties>
@@ -231,7 +231,18 @@
 </data>
  </layer>
  <objectgroup name="Spawners">
-  <object id="61" type="Item" x="24" y="16" width="8" height="8"/>
-  <object id="62" type="Enemy" x="40" y="16" width="8" height="8"/>
+  <object id="61" type="Item" x="24" y="32" width="8" height="8"/>
+  <object id="62" type="Enemy" x="48" y="32" width="8" height="8"/>
+  <object id="63" type="Item" x="88" y="8" width="8" height="8"/>
+  <object id="64" type="Item" x="80" y="96" width="8" height="8"/>
+  <object id="65" type="Item" x="160" y="112" width="8" height="8"/>
+  <object id="66" type="Item" x="200" y="96" width="8" height="8"/>
+  <object id="67" type="Item" x="224" y="56" width="8" height="8"/>
+  <object id="68" type="Item" x="208" y="24" width="8" height="8"/>
+  <object id="69" type="Item" x="160" y="64" width="8" height="8"/>
+  <object id="70" type="Item" x="128" y="64" width="8" height="8"/>
+  <object id="71" type="Item" x="24" y="104" width="8" height="8"/>
+  <object id="72" type="Item" x="64" y="72" width="8" height="8"/>
+  <object id="73" type="Item" x="120" y="16" width="8" height="8"/>
  </objectgroup>
 </map>

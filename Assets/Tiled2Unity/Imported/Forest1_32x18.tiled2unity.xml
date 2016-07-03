@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!--Tiled2Unity generated xml data-->
 <!--Do not modify by hand-->
-<!--Last exported: 7/2/2016 3:05:24 PM-->
+<!--Last exported: 7/2/2016 3:56:49 PM-->
 <Tiled2Unity version="1.0.6.0">
   <AssignMaterial mesh="mesh_0001" material="Forest" />
   <AssignMaterial mesh="mesh_0002" material="Forest" />
@@ -61,12 +61,56 @@
       <Property name="Facing" value="Left" />
     </GameObject>
     <GameObject name="Spawners" x="0" y="0" z="0">
-      <GameObject name="RectangleObject" x="3" y="-2" rotation="0" layer="Item">
+      <GameObject name="RectangleObject" x="3" y="-4" rotation="0" layer="Item">
         <Property name="SpawnerType" value="Item" />
         <BoxCollider2D width="1" height="1" />
       </GameObject>
-      <GameObject name="RectangleObject" x="5" y="-2" rotation="0" layer="Enemy">
+      <GameObject name="RectangleObject" x="6" y="-4" rotation="0" layer="Enemy">
         <Property name="SpawnerType" value="Enemy" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="11" y="-1" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="10" y="-12" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="20" y="-14" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="25" y="-12" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="28" y="-7" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="26" y="-3" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="20" y="-8" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="16" y="-8" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="3" y="-13" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="8" y="-9" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
+        <BoxCollider2D width="1" height="1" />
+      </GameObject>
+      <GameObject name="RectangleObject" x="15" y="-2" rotation="0" layer="Item">
+        <Property name="SpawnerType" value="Item" />
         <BoxCollider2D width="1" height="1" />
       </GameObject>
     </GameObject>
