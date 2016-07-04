@@ -25,7 +25,11 @@ public class MapData : MonoBehaviour {
         
         Rng = new System.Random(seed.GetHashCode());
 
-        Map = new int[width, height];
+        if (Map == null)
+        {
+            Map = new int[width, height];
+        }
+        
     }
 
     public int RandomEven(int min, int max)

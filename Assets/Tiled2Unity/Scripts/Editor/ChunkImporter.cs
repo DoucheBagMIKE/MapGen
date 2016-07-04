@@ -1,13 +1,57 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using Tiled2Unity;
+using UnityEditor;
 
 [CustomTiledImporter]
 class ChunkImporter : ICustomTiledImporter
 {
     public void HandleCustomProperties(UnityEngine.GameObject gameObject,
         IDictionary<string, string> props)
+        
     {
+        if(props.ContainsKey("Areas"))
+        {
+            foreach (string areaName in props["Areas"].Split('|'))
+            {
+                string[] guids = AssetDatabase.FindAssets(areaName, new string[1] { "Assets/Resources" }) ;
+                TilesetData data = null;
+                if(guids.Length == 0)
+                {
+                    // create a MapConfig;
+                    data = ScriptableObject.CreateInstance<TilesetData>();
+                    data.SmallRooms = new List<string>();
+                    data.LargeRooms = new List<string>();
+                    AssetDatabase.CreateAsset(data, "Assets/Resources/" + areaName + ".asset");
+                }
+                else
+                {
+                    // load the mapconfig and add this mapchunk to it.
+                    data = AssetDatabase.LoadAssetAtPath<TilesetData>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                    
+                }
+                if (props["IsLargeRoom"] == "true")
+                {
+                    if (!data.LargeRooms.Contains(gameObject.name))
+                    {
+                        data.LargeRooms.Add(gameObject.name);
+                        
+                    }
+
+                }
+                else
+                {
+                    if (!data.SmallRooms.Contains(gameObject.name))
+                    {
+                        data.SmallRooms.Add(gameObject.name);
+                        
+                    }
+
+                }
+                EditorUtility.SetDirty(data);
+            }
+
+        }
 
         if (props.ContainsKey("Facing"))
         {
@@ -43,7 +87,6 @@ class ChunkImporter : ICustomTiledImporter
         for (int i = 0; i < prefab.transform.childCount; i++)
         {
             GameObject child = prefab.transform.GetChild(i).gameObject;
-            Debug.Log(child.name);
 
             if (child.name.Contains("Door"))
             {                

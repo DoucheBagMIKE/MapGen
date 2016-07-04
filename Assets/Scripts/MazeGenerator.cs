@@ -37,6 +37,7 @@ public class MazeGenerator : MonoBehaviour
 
     public void Generate(int sx, int sy)
     {
+
         if (DeadEnds == null)
         {
             DeadEnds = new List<MapPos>();

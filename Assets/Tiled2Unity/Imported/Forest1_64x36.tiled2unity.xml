@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <!--Tiled2Unity generated xml data-->
 <!--Do not modify by hand-->
-<!--Last exported: 7/2/2016 3:55:53 PM-->
+<!--Last exported: 7/3/2016 6:06:39 PM-->
 <Tiled2Unity version="1.0.6.0">
   <AssignMaterial mesh="mesh_0001" material="Forest" />
   <AssignMaterial mesh="mesh_0002" material="Forest" />
@@ -14,6 +14,8 @@
   <AssignMaterial mesh="mesh_0009" material="Forest" />
   <AssignMaterial mesh="mesh_0010" material="Forest" />
   <Prefab name="Forest1_64x36" orientation="Orthogonal" staggerAxis="Y" staggerIndex="Odd" hexSideLength="0" numLayers="10" numTilesWide="64" numTilesHigh="36" tileWidth="8" tileHeight="8" exportScale="0.125" mapWidthInPixels="512" mapHeightInPixels="288" resource="true">
+    <Property name="Areas" value="Forest|Test" />
+    <Property name="IsLargeRoom" value="true" />
     <GameObject name="Floor" x="0" y="0" z="0">
       <GameObject name="Forest" copy="mesh_0001" sortingLayerName="" sortingOrder="0" opacity="1" />
     </GameObject>

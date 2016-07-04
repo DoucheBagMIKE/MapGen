@@ -116,9 +116,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapGen: {fileID: 0}
   mapData: {fileID: 0}
-  RemoveDeadEndsIterations: 2
-  DeadCells: 0
-  loopPercent: 0.504
+  RemoveDeadEndsIterations: 0
+  DeadCells: 3
+  loopPercent: 0.25
   windyOrRandomPercent: 1
 --- !u!114 &606721399
 MonoBehaviour:
@@ -133,8 +133,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GenType: 1
   mapData: {fileID: 0}
+  _32x32:
+  - Forest1_32x18
+  _64x64:
+  - for
   dirs: []
   MaxLargeRooms: 1
+  MapConfig: {fileID: 11400000, guid: 5b2aa49340f35b64391ab9c6c602e038, type: 2}
 --- !u!114 &606721400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6844b639679606f4094b5bde6cb4a21e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 11
-  height: 7
+  width: 9
+  height: 9
   randomSeed: 0
   seed: 6/30/2016 9:39:28 PM
 --- !u!4 &606721401

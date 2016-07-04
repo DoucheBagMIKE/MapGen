@@ -15,9 +15,9 @@ public class MapGenerator : MonoBehaviour {
 
     public int[,] Map;
 
-    List<string> _32x32;
-    List<string> _64x64;
-    List<string> Items;
+    public List<string> _32x32;
+    public List<string> _64x64;
+    List<GameObject> Items;
     private Dictionary<string, MapPos> _DoorRoomLookUp;
     public string[] dirs;
 
@@ -28,6 +28,8 @@ public class MapGenerator : MonoBehaviour {
 
     bool GotFiles = false;
     int mapsGenerated;
+
+    public TilesetData MapConfig;
 
     void Awake ()
     {
@@ -48,7 +50,7 @@ public class MapGenerator : MonoBehaviour {
 
         _32x32 = new List<string>();
         _64x64 = new List<string>();
-        Items = new List<string>();
+        Items = new List<GameObject>();
 
         mapsGenerated = 0;
         
@@ -201,7 +203,7 @@ public class MapGenerator : MonoBehaviour {
         for (int i = 0; i < Spawners.childCount; i++)
         {
             Transform child = Spawners.GetChild(i);
-            if (child.name == "ItemSpawner")
+            if (child.name == "ItemSpawner" && Items.Count != 0)
             {
                 GenItem((int)child.position.x, (int)child.position.y, Items[mapData.Rng.Next(0, Items.Count)], child);
             }
@@ -209,9 +211,9 @@ public class MapGenerator : MonoBehaviour {
         }
         return go;
     }
-    GameObject GenItem(int x, int y, string itemName, Transform spawner)
+    GameObject GenItem(int x, int y, GameObject prefab, Transform spawner)
     {
-        GameObject go = (GameObject)Instantiate(Resources.Load(itemName));
+        GameObject go = (GameObject)Instantiate(prefab);
         go.transform.position = new Vector3(x, y, 0);
         go.transform.parent = spawner.parent.parent;
         return go;
@@ -252,6 +254,22 @@ public class MapGenerator : MonoBehaviour {
     }
     void GenPrefabMaze()
     {
+        if (MapConfig != null)
+        {
+            mazeGen.RemoveDeadEndsIterations = MapConfig.RemoveDeadEndsIterations;
+            mazeGen.DeadCells = MapConfig.DeadCells;
+            mazeGen.loopPercent = MapConfig.loopPercent;
+            mazeGen.windyOrRandomPercent = MapConfig.windyOrRandomPercent;
+            mazeGen.Visited = new bool[MapConfig.width, MapConfig.height];
+
+            mapData.width = MapConfig.width;
+            mapData.height = MapConfig.height;
+            mapData.Map = new int[MapConfig.width, MapConfig.height];
+
+            MaxLargeRooms = MapConfig.MaxLargeRooms;
+            Items = MapConfig.Items;
+        }
+
         mapsGenerated++;
 
         if (mapData.LargeRoomPositions == null)
@@ -360,47 +378,56 @@ public class MapGenerator : MonoBehaviour {
         print("Dist to End: " + endDist.ToString());
         return endPos;
     }
-    void getFiles ()
-    {
-        if (GotFiles)
-        {
-            return;
-        }
+    //void getFiles ()
+    //{
+    //    if (GotFiles)
+    //    {
+    //        return;
+    //    }
 
-        string[] paths = new string[2]
-        {
-            "\\Tiled2Unity\\Prefabs\\Resources\\",
-            "\\Prefabs\\Resources\\"
-        };
+    //    string[] paths = new string[2]
+    //    {
+    //        "\\Tiled2Unity\\Prefabs\\Resources\\",
+    //        "\\Prefabs\\Resources\\"
+    //    };
 
-        DirectoryInfo info;
-        for(int i = 0; i < paths.GetLength(0); i++)
-        {
-            info = new DirectoryInfo(Application.dataPath + paths[i]);
-            var fileInfo = info.GetFiles("*.prefab");
-            foreach (FileInfo file in fileInfo)
-            {
-                string name = file.Name.Replace(".prefab", "");
-                if (name.Contains("32x18"))
-                {
-                    _32x32.Add(name);
-                }
-                else if (name.Contains("64x36"))
-                {
-                    _64x64.Add(name);
-                }
-                else if (name.Contains("Enemy"))
-                {
+    //    DirectoryInfo info;
+    //    for(int i = 0; i < paths.GetLength(0); i++)
+    //    {
+    //        info = new DirectoryInfo(Application.dataPath + paths[i]);
+    //        var fileInfo = info.GetFiles("*.prefab");
+    //        foreach (FileInfo file in fileInfo)
+    //        {
+    //            string name = file.Name.Replace(".prefab", "");
+    //            if (name.Contains("32x18"))
+    //            {
+    //                _32x32.Add(name);
+    //            }
+    //            else if (name.Contains("64x36"))
+    //            {
+    //                _64x64.Add(name);
+    //            }
+    //            else if (name.Contains("Enemy"))
+    //            {
 
-                }
-                else
-                {
-                    Items.Add(name);
-                }
-            }
-        }
+    //            }
+    //            else
+    //            {
+    //                Items.Add(name);
+    //            }
+    //        }
+    //    }
         
-     }
+    // }
+
+        void getFiles ()
+    {
+        if (MapConfig == null)
+            return;
+
+        _32x32 = MapConfig.SmallRooms;
+        _64x64 = MapConfig.LargeRooms;
+    }
 
     void InitLargeRooms()
     {
